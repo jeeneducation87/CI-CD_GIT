@@ -45,24 +45,24 @@
 
 ### Решение 1
 
-- Создал публичный репозиторий 
+- Создаем публичный репозиторий 
 
 https://github.com/jeeneducation87/Git.
 
-- клонируем репозиторий к себе на ПК в директорию git
+- Клонируем репозиторий к себе на ПК в директорию git
 ```python
 git clone https://github.com/jeeneducation87/Git.git git
 ```
 
 ![alt text](image.png)
 
-- переходим в директорию с репозиторием git
+- Переходим в директорию с репозиторием git
 
 ```python
 cd /home/splatonov/git/
 ```
 
-- выполняем первоначальную настройку git
+- Выполняем первоначальную настройку git
 
 ```python
 git config --global user.name "splatonov"
@@ -70,7 +70,7 @@ git config --global user.email jeeneducation87@gmail.com
 ```
 ![alt text](image-1.png)
 
-- выполняем `git status` и запоминаем результат
+- Выполняем `git status` и запоминаем результат
 Рабочая директория чиста, так как ничего не изменяли
 ![alt text](image-2.png)
 
@@ -114,7 +114,7 @@ git push origin main
 
 https://github.com/jeeneducation87/Git/commit/0763840abea5d25b4ce7d8dd3a474cfcd002838d
 
-
+---
 
 ### Задание 2
 
@@ -129,9 +129,63 @@ https://github.com/jeeneducation87/Git/commit/0763840abea5d25b4ce7d8dd3a474cfcd0
 
 ### Решение 2
 
+- Создаем файл `.gitignore`:
 
+```python
+touch .gitignore
+```
 
+- Проверяем статус репозитория:
 
+После создания файла `.gitignore`, проверяем статус репозитория, чтобы убедиться, что файл был создан:
+ 
+```python
+git status
+```
+![alt text](image-10.png)
+
+Видим `.gitignore` в списке неотслеживаемых файлов.
+
+- Добавляем файл `.gitignore` в следующий коммит:
+
+Вводим команду `git add`, чтобы добавить `.gitignore` в индекс:
+ 
+```python
+git add .gitignore
+```
+
+- Пишем правила в файле `.gitignore`:
+
+Открываем файл `.gitignore` в текстовом редакторе и добавляем следующие строки, чтобы игнорировать файлы .pyc и все файлы в директории cache:
+ 
+```python
+*.pyc
+cache/
+```
+
+Сохраняем изменения и закрываем файл.
+
+- Делаем коммит:
+
+ Фиксируем изменения в репозитории с помощью команды `git commit`:
+
+ 
+```python
+git commit -m "Add .gitignore to ignore .pyc files and cache directory"
+```
+![alt text](image-11.png)
+
+- Выполняем пуш и отправляем изменения в удаленный репозиторий:
+ 
+```python
+git push origin main
+```
+
+![alt text](image-12.png)
+
+Ссылка на коммит `"Add .gitignore to ignore .pyc files and cache directory"`:
+
+https://github.com/jeeneducation87/Git/commit/d3539872c48b78eec4d59e4c4ca308c02791d48a
 
 ---
 
@@ -154,6 +208,116 @@ https://github.com/jeeneducation87/Git/commit/0763840abea5d25b4ce7d8dd3a474cfcd0
 
 ![скрин для Git](https://github.com/netology-code/sdvps-homeworks/assets/77622076/e73589cf-7e97-40e5-ac01-d1d55376f1b9)
 
----
+
 ### Решение 3
 
+- Создаем новую ветку dev и переключаемся на неё.
+ 
+```python
+git checkout -b dev
+```
+
+- Создаем в ветке dev файл test.sh с произвольным содержимым.
+
+Создаем файл test.sh и добавляем в него произвольное содержимое.
+ 
+```python
+echo "echo 'Hello from dev branch'" > test.sh
+```
+
+- Сделаем несколько коммитов и пушей в ветку dev.
+
+Первый коммит:
+ 
+```python
+git add test.sh
+git commit -m "Add initial version of test.sh"
+```
+![alt text](image-13.png)
+
+Изменяем файл test.sh, добавив, например, новую строку:
+
+ ```python
+echo "echo 'Another line in test.sh'" >> test.sh
+```
+
+Второй коммит:
+ 
+```python
+git add test.sh
+git commit -m "Update test.sh with another line"
+```
+
+Пушим изменения в удалённый репозиторий:
+ 
+```python
+git push origin dev
+```
+![alt text](image-14.png)
+
+- Переключаемся на основную ветку main.
+
+```python
+git checkout main
+```
+
+- Добавляем файл main.sh в основной ветке, делаем коммит и пуш.
+
+Создаем файл main.sh с произвольным содержимым:
+ 
+```python
+echo "echo 'Hello from main branch'" > main.sh
+```
+
+Делаем коммит:
+ 
+```python
+git add main.sh
+git commit -m "Add main.sh to main branch"
+```
+
+Пушим изменения в удалённый репозиторий:
+ 
+```python
+git push origin main
+```
+![alt text](image-15.png)
+
+- Делаем мердж ветки dev в основную ветку main.
+
+Проверяем, что мы находимся в основной ветке (main):
+
+```python
+git checkout main
+```
+![alt text](image-16.png)
+
+Выполняем слияние:
+ 
+```python
+git merge dev
+```
+
+В появившемся окне пишем что то вроде:
+ 
+```python
+Merge branch 'dev' into main
+Integrate changes from dev branch, including updates to test.sh
+```
+![alt text](image-17.png)
+
+- Делаем пуш в основной ветке.
+
+```python
+git push origin main
+```
+![alt text](image-18.png)
+
+Граф комитов:
+
+![alt text](image-19.png)
+
+Ссылка на граф:
+https://github.com/jeeneducation87/Git/network
+
+---
