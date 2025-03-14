@@ -1,0 +1,77 @@
+Started by user testtest
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/lib/jenkins/workspace/NexusPipeLine
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Git)
+[Pipeline] git
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/NexusPipeLine/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/jeeneducation87/sdvps-materials.git # timeout=10
+Fetching upstream changes from https://github.com/jeeneducation87/sdvps-materials.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.43.0'
+ > git fetch --tags --force --progress -- https://github.com/jeeneducation87/sdvps-materials.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 223dbc3f489784448004e020f2ef224f17a7b06d (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 223dbc3f489784448004e020f2ef224f17a7b06d # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git branch -D main # timeout=10
+ > git checkout -b main 223dbc3f489784448004e020f2ef224f17a7b06d # timeout=10
+Commit message: "Update README.md"
+ > git rev-list --no-walk 223dbc3f489784448004e020f2ef224f17a7b06d # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Test)
+[Pipeline] sh
++ go test .
+ok  	github.com/netology-code/sdvps-materials	(cached)
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build)
+[Pipeline] sh
++ go build -a -installsuffix nocgo -o app/app_go_v6 .
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Upload)
+[Pipeline] sh
++ curl http://51.250.47.83:8081/repository/softstore/ --upload-file app/app_go_v6 -v -u admin:admin64efh097
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 51.250.47.83:8081...
+* Connected to 51.250.47.83 (51.250.47.83) port 8081
+* Server auth using Basic with user 'admin'
+> PUT /repository/softstore/app_go_v6 HTTP/1.1
+> Host: 51.250.47.83:8081
+> Authorization: Basic YWRtaW46YWRtaW42NGVmaDA5Nw==
+> User-Agent: curl/8.5.0
+> Accept: */*
+> Content-Length: 2011554
+> Expect: 100-continue
+> 
+< HTTP/1.1 100 Continue
+} [65536 bytes data]
+* We are completely uploaded and fine
+< HTTP/1.1 201 Created
+< Date: Fri, 14 Mar 2025 20:43:36 GMT
+< Server: Nexus/3.78.1-02 (COMMUNITY)
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: sandbox allow-forms allow-modals allow-popups allow-presentation allow-scripts allow-top-navigation
+< X-XSS-Protection: 1; mode=block
+< Content-Length: 0
+< 
+100 1964k    0     0  100 1964k      0  6184k --:--:-- --:--:-- --:--:-- 6196k
+* Connection #0 to host 51.250.47.83 left intact
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

@@ -31,6 +31,60 @@
 
 ### Решение 1
 
+- Установка Java 
+
+```python
+sudo apt-get install default-jre
+```
+
+Устанавливаем Jenkins
+
+```python
+curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key |
+sudo tee \
+/usr/share/keyrings/jenkins-keyring.asc > /dev/null
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+/etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo apt-get update
+sudo apt-get install jenkins
+```
+
+Запускаем и проверяем статус Jenkins
+
+```python
+sudo systemctl start jenkins
+sudo systemctl status jenkins
+```
+![alt text](image-21.png)
+
+![alt text](image-22.png)
+
+- Устанавливаем go
+
+![alt text](image-23.png)
+
+Проверяем, что go доступен для jenkins
+
+![alt text](image-24.png)
+
+- Делаем форк репозитория в свой аккаунт на GitHub
+https://github.com/jeeneducation87/sdvps-materials
+
+- Создаем в jenkins проект MyAwsomeProject
+Добавляем репозиторий и указываем ветку main
+
+![alt text](image-25.png)
+
+Настраиваем шаги сборки
+
+![alt text](image-26.png)
+
+Запускаем сборку
+
+![alt text](image-27.png)
+![alt text](image-28.png)
+![alt text](image-29.png)
 
 ---
 
@@ -45,7 +99,36 @@
 
 ### Решение 2
 
-В
+Код pipline
+
+```java
+pipeline {
+ agent any
+ stages {
+  stage('Git') {
+   steps {git branch: 'main', url: 'https://github.com/jeeneducation87/sdvps-materials.git'}
+  }
+  stage('Test') {
+   steps {
+    sh 'go test .'
+   }
+  }
+  stage('Build') {
+   steps {
+    sh 'docker build . -t ubuntu-bionic:8082/hello-world:v$BUILD_NUMBER'
+   }
+ }
+}
+}
+```
+
+![alt text](image-30.png)
+
+Вывод результата сборки
+
+![alt text](image-31.png)
+![alt text](image-32.png)
+![alt text](image-33.png)
 
 ---
 
@@ -62,6 +145,43 @@
 
 ### Решение 3
 
+- Установил Nexus
+Создал пользователя
+Настроил raw-hosted репозиторий
+
+![alt text](image-34.png)
+
+```python
+pipeline {
+ agent any
+ stages {
+  stage('Git') {
+   steps {git branch: 'main', url: 'https://github.com/jeeneducation87/sdvps-materials.git'}
+  }
+  stage('Test') {
+   steps {
+    sh 'go test .'
+   }
+  }
+  stage('Build') {
+   steps {
+    sh 'go build -a -installsuffix nocgo -o app/app_go_v$BUILD_NUMBER .'
+   }
+   }
+   stage('Upload') {
+   steps {
+    sh 'curl http://51.250.47.83:8081/repository/softstore/ --upload-file app/app_go_v$BUILD_NUMBER -v -u "admin:admin64efh097"'   }
+  }
+}
+}
+```
+![alt text](image-35.png)
+![alt text](image-36.png)
+![alt text](image-37.png)
+
+Приложение собрано и доставлено в репозиторий
+
+![alt text](image-38.png) 
 
 
 ---
