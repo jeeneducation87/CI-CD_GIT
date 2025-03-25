@@ -15,18 +15,24 @@
 ### Решение 1
 
 - Переходим в Configuration > Templates > Create Template
+![alt text](image.png)
 
+- Создаем новый шаблон и называем его CPU RAM Template
+Прикрепляем шаблон CPU-RAM-Template к ещё несуществующей группе SystemData Templates
+![alt text](image-1.png)
 
-- Создаем новый шаблон и называем его CPU-RAM-Template
+Шаблон успешно создан:
+![alt text](image-2.png)
 
-- Прикрепляем шаблон CPU-RAM-Template к ещё несуществующей группе SystemData Templates
-
-
+- Настраиваем CPU и RAM Items для шаблона CPU RAM Template:
+![alt text](image-4.png)
+![alt text](image-5.png)
+![alt text](image-6.png)
 
  ---
 
 ### Задание 2
-Добавьте в Zabbix два хоста и задайте им имена <фамилия и инициалы-1> и <фамилия и инициалы-2>. Например: ivanovii-1 и ivanovii-2.
+Добавьте в Zabbix два хоста и задайте им имена.
 
 #### Процесс выполнения
 1. Выполняя ДЗ сверяйтесь с процессом отражённым в записи лекции.
@@ -41,7 +47,15 @@
 
 ### Решение 2
 
+- Настроили 2 агента и связали их с zabbix server. 
+Configuration > Hosts:
+![alt text](image-7.png)
+- Прикрепляем за каждым хостом шаблон Linux by Zabbix Agent:
+![alt text](image-8.png)
+![alt text](image-9.png)
 
+- В Latest Data начали появляться данные с добавленных агентов:
+![alt text](image-10.png)
 
  ---
 
@@ -59,6 +73,12 @@
 
 ### Решение 3
 
+- В настройках каждого хоста в разделе Templates прикрепляем шаблон CPU RAM Template и шаблон Linux by Zabbix Agent:
+![alt text](image-11.png)
+
+- В Latest Data начали появляться данные с привязанных шаблонов:
+![alt text](image-12.png)
+![alt text](image-13.png)
 
  ---
 
@@ -75,5 +95,10 @@
 
 
 ### Решение 4
+
+- В разделе Dashboards создаем новый дашборд My system Monitor
+![alt text](image-14.png)
+Размещаем виджеты
+![alt text](image-15.png)
 
  ---
