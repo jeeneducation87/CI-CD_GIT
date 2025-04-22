@@ -80,14 +80,40 @@ sudo nano /etc/keepalived/keepalived.conf
 sudo systemctl start keepalived
 sudo systemctl enable keepalived
 ```
-- Выполняем на VM1 (MASTER)
+- Выполняем на VM1 (MASTER) ip 10.129.0.10
 ```python
 ip addr
 ```
 ![alt text](image-6.png)
+Видим виртуальный ip 10.129.0.40 
 
-- Выполняем на VM2 (BACKUP)
+- Выполняем на VM2 (BACKUP) ip 10.129.0.34
 ```python
 ip addr
 ```
+![alt text](image-10.png)
+
+- Переименовываем файл index.html (in45dex789.html) на VM1 (MASTER) ip 10.129.0.10 и выполняем:
+```python
+ip addr
+```
+![alt text](image-14.png)
+![alt text](image-15.png)
+Не видим виртуальный ip 10.129.0.40 
+
+- Проверяем VM2 (BACKUP) ip 10.129.0.34
+![alt text](image-16.png)
+VM2 (BACKUP) перешла в стстояние MASTER.  Появился виртуальный адрес ip 10.129.0.34 в сетевой конфигурации
+В логах также есть соответствующая запись:
+![alt text](image-17.png)
+
+- Исправляем  файл index.html на VM1 (MASTER) ip 10.129.0.10 и выполняем:
+```python
+ip addr
+```
+![alt text](image-18.png)
+Виртуальный ip 10.129.0.40 снова доступен в конфигурации сети на машине VM1 (MASTER) ip 10.129.0.10.
+В логах keepalived также изменилось состояние на MASTER:
+![alt text](image-19.png)
+
 ------

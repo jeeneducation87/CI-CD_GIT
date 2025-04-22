@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SERVER=localhost
-PORT=8000
+PORT=80
 PATH_FILE=/server/index.html
 
 </dev/tcp/$SERVER/$PORT
