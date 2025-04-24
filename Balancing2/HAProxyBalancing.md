@@ -77,17 +77,20 @@ curl http://localhost:1325
 
 
 ## Решение 2
+
 - Создаем директорию для сервера 3
 ```python
 mkdir -p ~/server3
 echo "<h1>Server 3 :7777</h1>" > ~/server3/index.html
 ```
+
 - Запускаем сервер 3
 ```python
 cd ~/server3
 python3 -m http.server 7777 --bind 0.0.0.0
 ```
 ![alt text](image-4.png)
+
 - Настриваем haproxy.cfg:
 раскомментируем строку #default_backend web_servers для настройки балансировки на 7 уровне и внесем корректировки в секцию бекенда:
 ```json
@@ -101,11 +104,13 @@ python3 -m http.server 7777 --bind 0.0.0.0
         server s3 127.0.0.1:7777 check weight 4
 ```
 Конфигурационный файл [haproxy2.cfg](haproxy2.cfg)
+
 - Проверяем балансировку roundrobin c парметром weight, отправляя запросы на порт фронтенда 8088:
 ```python
 curl http://127.0.0.1:8088
 ```
 ![alt text](image-5.png)
+
 - Выполняем настройку haproxy.cfg, чтобы использовать фильтр по хосту example.local:
 ```json
 frontend example  # секция фронтенд
@@ -115,15 +120,26 @@ frontend example  # секция фронтенд
 	acl ACL_example.local hdr(host) -i example.local
 	use_backend web_servers if ACL_example.local
 ```
+
 - Проверяем работу балансировщика с запросами от имени хоста example.local:
-Без указания хоста
+
+1. Без указания хоста
+```python
 curl http://127.0.0.1:8088
+```
 ![alt text](image-6.png)
 Получаем ошибку 503
-С указанием хоста
+
+2. С указанием хоста
+```python
 curl -H 'Host:example.local' http://127.0.0.1:8088
+```
 ![alt text](image-7.png)
+
 - Отключаем сервер Server 2 :9999:
+
 ![alt text](image-8.png)
+
 Запросы распределяются по доступным серверам.
+
 ------
