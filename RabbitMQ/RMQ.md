@@ -9,7 +9,13 @@
 
 ### Решение 1
 
-
+В работе использовал docker для настройки RMQ.
+Успользуя docker compouse и файл [text](docker-compose.yml) поднял несколько контейнеров с брокером очередей RMQ
+![alt text](image.png)
+В одном из контейнеров проброшен порт 15672 для работы с UI и настройки RMQ через Web интерфейс.
+Порт 5672 будем использовать для отправки amqp сообщений.
+Логинимся в Web интерфейс RMQ используя log/pas по умолчанию: test/test
+![alt text](image-2.png)
 
 ---
 
@@ -35,7 +41,18 @@ $ pip install pika
 
 ### Решение 2
 
-- 
+- Используя скрипт [producer.py](producer.py) (описание URI для подключения вынесено в [settings.py](settings.py)) создал очередь *hello* в которую было добавлено сообщение *Hello!*:
+![alt text](image-1.png)
+- В UI RabbitMQ находим очередь hello и нажимаем Get Message(s) с количеством 1
+![alt text](image-3.png)
+Получаем Payload "Hello!"
+Сообщение успешно положено в очередь RMQ.
+
+-  Используя скрипт [consumerNew.py](consumerNew.py) забрали сообщение из очереди и получили текст "Hello" в терминале:
+![alt text](image-4.png)
+- В UI RabbitMQ находим очередь hello и нажимаем Get Message(s) с количеством 1:
+![alt text](image-5.png)
+Получаем сообщение, что очередь пуста. 
 
 ---
 
@@ -75,5 +92,56 @@ $ rabbitmqadmin get queue='hello'
 
 ### Решение 3
 
-- 
+- Запускаем в контейнерах три экземпляра "ноды" RMQ (конфиг файл для RMQ кластера [rabbitmq.conf](rabbitmq.conf) с добавленными нодами)
+- Включаем репликацию:
+1) открываем веб интерфейс RabbitMQ http://localhost:15672/ и переходим на вкладку Admin>Policies
+![alt text](image-6.png)
+
+2) открываем блок Add / update a policy и заполняем его:
+![alt text](image-7.png)
+
+3) нажимаем опку add / update policiy
+4) проверяем настройки репликиции на вкладке Exchanges:
+![alt text](image-8.png)
+В колонке Features отображается политика ha-all
+
+- Переходим общую вкладку и смотрим доступность нод в кластере:
+![alt text](image-9.png)
+
+- Выполнил команду *cluster_status* на первой и второй нодах:
+```shell script
+$ rabbitmqctl cluster_status
+```
+![alt text](image-10.png)
+![alt text](image-11.png)
+
+Полный текст вывода в файле [cluster_status.txt](cluster_status.txt) 
+
+
+- Снова запускаем скрипт producer.py:
+![alt text](image-12.png)
+
+- Выполняем команду на каждой ноде:
+```shell script
+$ rabbitmqadmin -u test -p test get queue='hello'
+```
+![alt text](image-14.png)
+![alt text](image-15.png)
+![alt text](image-13.png)
+![alt text](image-16.png)
+
+- Отключаем ноду RMQ
+![alt text](image-17.png)
+![alt text](image-18.png)
+
+- Выполняем скрипт [consumerNew.py](consumerNew.py):
+![alt text](image-19.png)
+Получаем текст "Hello!"
+- Выполняем команду на произвольной ноде:
+```shell script
+$ rabbitmqadmin -u test -p test get queue='hello'
+```
+![alt text](image-20.png)
+Сообщений в очереди нет
+
 ---
