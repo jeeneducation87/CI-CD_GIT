@@ -32,7 +32,7 @@ ALTER USER 'sys_test'@'localhost' IDENTIFIED WITH mysql_native_password BY 'pass
 ### Решение 1
 
 1.1. 
-- Сервис MySQL поднят в виртуальной машине (vm5) на гипервизоре (lab) в локальной дамашней сети.
+- Сервис MySQL поднят в виртуальной машине (vm5) на гипервизоре (lab) в локальной домашней сети.
 Порт 
 ![alt text](image.png)
 Порт 3306 для удобства подключения DBeaver проксируется из внутренней сети через haproxy 
