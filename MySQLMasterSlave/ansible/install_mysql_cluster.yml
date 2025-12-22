@@ -1,0 +1,8 @@
+# install_mysql_cluster.yml
+---
+- name: "Install and Configure MySQL Master - Slave replication"
+  hosts: mysql_cluster # vm1 (slave), vm2 (master), vm3 (slave)
+  become: yes
+  gather_facts: yes # нужно для вычисления IP и facts
+  roles:
+    - mysql_cluster

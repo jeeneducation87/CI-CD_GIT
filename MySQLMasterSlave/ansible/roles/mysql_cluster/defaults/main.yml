@@ -1,0 +1,38 @@
+# roles/mysql_cluster/defaults/main.yml
+---
+# --- Версии и пакеты ---
+mysql_package_name: "mysql-server"
+mysql_version: "8.0"
+mysql_packages:
+  - mysql-server
+  - python3-pymysql
+
+# --- Системные настройки ---
+mysql_service_name: "mysql"
+mysql_config_file: "/etc/mysql/mysql.conf.d/mysqld.cnf"
+
+# --- Сеть ---
+mysql_bind_address: "0.0.0.0"
+mysql_port: 3306
+
+# --- Безопасность (root) ---
+mysql_root_password: "root_pass"
+
+# --- Прикладная БД (создается на Мастере) ---
+mysql_db_name: "app_db"
+mysql_user_name: "app_user"
+mysql_user_password: "app_pass"
+
+# --- ДИНАМИЧЕСКИЕ ПЕРЕМЕННЫЕ (ВЫЧИСЛЯЕМЫЕ) ---
+# 1. Определение роли текущего хоста:
+# Если имя текущего хоста совпадает с mysql_master_hostname из group_vars, то это Master.
+mysql_replication_role: "{{ 'master' if inventory_hostname == mysql_master_hostname else 'slave' }}"
+
+# 2. Вычисление IP-адреса Мастера:
+# Смотрим в hostvars (факты) того хоста, который назначен мастером.
+# Сначала пробуем взять 'ansible_host' (из inventory), если нет - 'ansible_default_ipv4'.
+mysql_master_ip: "{{ hostvars[mysql_master_hostname]['ansible_host'] | default(hostvars[mysql_master_hostname]['ansible_default_ipv4']['address']) }}"
+
+# 3. Server ID:
+# Берем последний октет IP адреса текущего хоста
+mysql_server_id: "{{ ansible_default_ipv4.address.split('.')[-1] }}"

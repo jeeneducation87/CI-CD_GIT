@@ -1,0 +1,11 @@
+---
+# Кто группе хостов mysql_cluster является Мастером
+mysql_master_hostname: "vm2"
+
+# Настройки пользователя репликации
+mysql_repl_user: "replicator"
+mysql_repl_password: "6#h2sypgFJ9Vo3YV"
+
+# Настройки полусинхронной репликации
+mysql_semisync_timeout: 10000
+mysql_semisync_wait_count: 1

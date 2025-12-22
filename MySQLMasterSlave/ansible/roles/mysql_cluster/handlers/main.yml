@@ -1,0 +1,7 @@
+# roles/mysql_cluster/handlers/main.yml
+---
+- name: restart mysql
+  ansible.builtin.systemd:
+    name: "{{ mysql_service_name }}"
+    state: restarted
+    

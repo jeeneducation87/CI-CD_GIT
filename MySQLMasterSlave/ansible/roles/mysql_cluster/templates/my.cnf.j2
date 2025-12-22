@@ -1,0 +1,54 @@
+# {{ ansible_managed }}
+
+[mysqld]
+# Basic Settings
+bind-address            = {{ mysql_bind_address }}
+port                    = {{ mysql_port }}
+pid-file                = /var/run/mysqld/mysqld.pid
+socket                  = /var/run/mysqld/mysqld.sock
+datadir                 = /var/lib/mysql
+log-error               = /var/log/mysql/error.log
+
+# ==========================================
+# --- Replication & GTID Settings ---
+# ==========================================
+server-id               = {{ mysql_server_id }}
+log_bin                 = /var/log/mysql/mysql-bin.log
+binlog_format           = ROW
+expire_logs_days        = 7
+max_binlog_size         = 100M
+
+# GTID (Required for modern failover and setup)
+gtid_mode                = ON
+enforce_gtid_consistency = ON
+
+# ==========================================
+# --- Semi-Sync Replication Plugins ---
+# ==========================================
+# Явно загружаем плагины, чтобы они были доступны сразу
+plugin_load_add = rpl_semi_sync_master=semisync_master.so
+plugin_load_add = rpl_semi_sync_slave=semisync_slave.so
+
+# ==========================================
+# --- Role Specific Settings ---
+# ==========================================
+{% if mysql_replication_role == 'master' %}
+# --- MASTER SETTINGS ---
+# Включаем отправку в режиме Semi-Sync
+rpl_semi_sync_master_enabled = 1
+# Ждем 10 секунд (по умолчанию), потом переходим в асинхрон
+rpl_semi_sync_master_timeout = {{ mysql_semisync_timeout }}
+# Ждем подтверждения хотя бы от ОДНОГО слейва (vm1 или vm3)
+rpl_semi_sync_master_wait_for_slave_count = {{ mysql_semisync_wait_count }}
+
+# Мастер не должен быть слейвом (на всякий случай)
+rpl_semi_sync_slave_enabled = 0
+
+{% else %}
+# --- SLAVE SETTINGS ---
+# Включаем прием в режиме Semi-Sync
+rpl_semi_sync_slave_enabled = 1
+
+# Слейв не является мастером
+rpl_semi_sync_master_enabled = 0
+{% endif %}
