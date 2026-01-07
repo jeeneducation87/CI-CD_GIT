@@ -176,11 +176,15 @@ sudo tcpdump host 192.168.160.128 -w scan_results.pcap
 sudo nmap -sS -p 21,22,80 192.168.160.128
 ```
 
+![alt text](image-19.png)
+
 - FIN Scan
 
 ```python
 sudo nmap -sF -p 21,22,80 192.168.160.128
 ```
+
+![alt text](image-18.png)
 
 - Xmas Scan
 
@@ -188,11 +192,15 @@ sudo nmap -sF -p 21,22,80 192.168.160.128
 sudo nmap -sX -p 21,22,80 192.168.160.128
 ```
 
+![alt text](image-18.png)
+
 - UDP Scan Внимание: UDP сканирование медленное. Сканируем только один порт (137 - NetBIOS), который точно открыт.
  
 ```python
 sudo nmap -sU -p 137 192.168.160.128
 ```
+
+![alt text](image-20.png)
 
 3. Завершение и анализ
 
